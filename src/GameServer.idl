@@ -1,0 +1,41 @@
+
+module gameserver {
+
+	interface GameServer {
+		
+		string getPlayerStatus(
+				in string adminUserName, 
+				in string adminPassword, 
+				in string ipAddress);
+		
+		string createPlayerAccount(
+				in string firstName, 
+				in string lastName, 
+				in short age, 
+				in string userName, 
+				in string password, 
+				in string ipAddress);
+				
+		string playerSignIn(
+				in string userName, 
+				in string password, 
+				in string ipAddress);
+				
+		string playerSignOut(
+				in string userName, 
+				in string ipAddress);
+				
+		string transferAccount(
+				in string userName,
+				in string password, 
+				in string oldIpAddress,
+				in string newIpAddress);
+				
+		string suspendAccount(
+				in string adminUserName, 
+				in string adminPassword, 
+				in string ipAddress,
+				in string userNameToSuspend);
+		
+	}; 
+};

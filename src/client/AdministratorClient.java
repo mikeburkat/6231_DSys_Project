@@ -65,7 +65,9 @@ public class AdministratorClient {
 	}
 	
 	// ------------------------------------------------------------------------
-
+	// TODO: convert this to find the front end server
+	// ------------------------------------------------------------------------
+	
 	private GameServer findServer(String ip) {
 		GameServer server = null;
 		String s = null;
@@ -102,7 +104,8 @@ public class AdministratorClient {
 	}
 
 	// ------------------------------------------------------------------------
-	
+	// TODO: convert this to get the front end server
+	// ------------------------------------------------------------------------
 	public GameServer getServer(String serverName) {
 		
 		String[] args = new String[1];

@@ -1,4 +1,4 @@
-package replica3;
+package replica1;
 
 public class IpMulticastClient {
 

@@ -1,4 +1,4 @@
-package replica1leader;
+package replica1;
 
 public class UdpKillSwitch {
 

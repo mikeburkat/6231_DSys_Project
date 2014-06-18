@@ -1,10 +1,7 @@
-package replica1leader;
+package replica0leader;
 
-public class UdpFrontEnd implements Runnable {
+public class Replica implements Runnable {
 
-	
-	
-	
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub

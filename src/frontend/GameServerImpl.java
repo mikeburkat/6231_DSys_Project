@@ -15,7 +15,7 @@ public class GameServerImpl extends GameServerPOA {
 	public String getPlayerStatus(String adminUserName, String adminPassword,
 			String ipAddress) {
 		// TODO Auto-generated method stub
-		String getPlayerStatusRequest ="getPlayerStatus" + "," + adminUserName + "," + adminPassword + "," + ipAddress;
+		String getPlayerStatusRequest ="getStatus" + "," + adminUserName + "," + adminPassword + "," + ipAddress;
 		int portNum = 6200;
 		String getPlayerStatusResult;
 		String GET_STATUS_FAIL = "GET_STATUS_FAIL";
@@ -38,7 +38,7 @@ public class GameServerImpl extends GameServerPOA {
 		int portNum = 6200;
 		String createPlayerAccountResult;
 		String CREATE_PLAYER_ACCOUNT_FAIL = "CREATE_PLAYER_ACCOUNT_FAIL";
-		String createPlayerAccountRequest = "createPlayerAccount" + "," + firstName + "," + lastName + "," + age + "," + userName + "," + password + "," + ipAddress;
+		String createPlayerAccountRequest = "create" + "," + firstName + "," + lastName + "," + age + "," + userName + "," + password + "," + ipAddress;
 		UdFrontEndClient udpClient = new UdFrontEndClient(createPlayerAccountRequest, portNum);
 		try {
 			udpClient.UDPSend();
@@ -58,7 +58,7 @@ public class GameServerImpl extends GameServerPOA {
 		int portNum = 6200;
 		String playerSignInResult;
 		String PLAYER_SIGNIN_FAIL = "PLAYER_SIGNIN_FAIL";
-		String playerSignInRequest = "playerSignIn" + "," + userName + "," + password + "," + ipAddress;
+		String playerSignInRequest = "signIn" + "," + userName + "," + password + "," + ipAddress;
 		UdFrontEndClient udpClient = new UdFrontEndClient(playerSignInRequest, portNum);
 		try {
 			udpClient.UDPSend();
@@ -77,7 +77,7 @@ public class GameServerImpl extends GameServerPOA {
 		int portNum = 6200;
 		String playerSignOutResult;
 		String PLAYER_SIGNOUT_FAIL = "PLAYER_SIGNOUT_FAIL";
-		String playerSignOutRequest = "playerSignOut" + "," + userName + "," + "ipAddress";
+		String playerSignOutRequest = "signOut" + "," + userName + "," + "ipAddress";
 		UdFrontEndClient udpClient = new UdFrontEndClient(playerSignOutRequest, portNum);
 		try {
 			udpClient.UDPSend();
@@ -97,7 +97,7 @@ public class GameServerImpl extends GameServerPOA {
 		int portNum = 6200;
 		String transferAccountResult;
 		String TRANSFER_ACCOUNT_FAIL = "TRANSFER_ACCOUNT_FAIL";
-		String tranferAccountRequest = "transferAccount" + "," + userName + "," + password + "," + oldIpAddress + "," + newIpAddress;
+		String tranferAccountRequest = "transfer" + "," + userName + "," + password + "," + oldIpAddress + "," + newIpAddress;
 		UdFrontEndClient udpClient = new UdFrontEndClient(tranferAccountRequest, portNum);
 		try {
 			udpClient.UDPSend();
@@ -117,7 +117,7 @@ public class GameServerImpl extends GameServerPOA {
 		int portNum = 6200;
 		String suspendAccountResult;
 		String SUSPEND_ACCOUNT_FAIL = "SUSPEND_ACCOUNT_FAIL";
-		String suspendAccountRequest = "suspendAccount" + "," + adminUserName + "," + ipAddress + "," + userNameToSuspend;
+		String suspendAccountRequest = "suspend" + "," + adminUserName + "," + ipAddress + "," + userNameToSuspend;
 		UdFrontEndClient udpClient = new UdFrontEndClient(suspendAccountRequest, portNum);
 		try {
 			udpClient.UDPSend();

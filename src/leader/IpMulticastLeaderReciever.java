@@ -1,5 +1,6 @@
 package leader;
 
+import java.io.IOException;
 import java.net.MulticastSocket;
 
 public class IpMulticastLeaderReciever implements Runnable {
@@ -8,7 +9,12 @@ public class IpMulticastLeaderReciever implements Runnable {
 	public IpMulticastLeaderReciever(int port) {
 		
 		
-		MulticastSocket multicast = new MulticastSocket(port);
+		try {
+			MulticastSocket multicast = new MulticastSocket(port);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	

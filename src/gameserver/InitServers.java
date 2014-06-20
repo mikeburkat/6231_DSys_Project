@@ -15,9 +15,9 @@ public class InitServers {
 		EuropeServer eu = new EuropeServer(replica);
 		AsiaServer as = new AsiaServer(replica);
 
-		new Thread (na).start();
-		new Thread (eu).start();
-		new Thread (as).start();
+		new Thread(na).start();
+		new Thread(eu).start();
+		new Thread(as).start();
 		
 	}
 	

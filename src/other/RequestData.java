@@ -3,7 +3,7 @@ package other;
 public class RequestData {
 	
 	public String command;
-	public String userId;
+	public String clientId;
 	public String requestId;
 	
 	public String firstName;
@@ -16,7 +16,9 @@ public class RequestData {
 	public String userToSuspend;
 	public String newIpAddress;
 	
-	
+	public String toString() {
+		return "Client ID: " +clientId+ " Request ID: " +requestId+ " Command: " +command+" UserName: " +userName;
+	}
 	
 
 }

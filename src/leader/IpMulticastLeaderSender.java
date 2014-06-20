@@ -1,5 +1,6 @@
 package leader;
 
+import java.io.IOException;
 import java.net.MulticastSocket;
 
 import other.RequestData;
@@ -10,7 +11,11 @@ public class IpMulticastLeaderSender {
 	public IpMulticastLeaderSender(int port) {
 		
 		
-		MulticastSocket multicast = new MulticastSocket();
+		try {
+			MulticastSocket multicast = new MulticastSocket();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 	}
 	

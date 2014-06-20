@@ -5,8 +5,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
-import leader.IpMulticastLeader;
 import leader.IpMulticastLeaderReciever;
+import leader.IpMulticastLeaderSender;
 
 import org.omg.CORBA.ORB;
 
@@ -30,20 +30,28 @@ public class Replica {
 		
 		if (replica == 0) {
 			// do leader code: 
-			// setup link to get messages from front end.
 			// setup link to Replica Manger.
+			
+			// setup link to get messages from front end.
+			
+			
 			// setup IP multicast group to send messages to other replicas.
 			IpMulticastLeaderSender multicastSender = new IpMulticastLeaderSender(multicastReplicaRecieve);
 			IpMulticastLeaderReciever multicastReciever = new IpMulticastLeaderReciever(multicastReplicaSend);
 			
 			
+			
+			
 		} else {
 			// do backup code:
-			// join the IP multicast group to get messages from leader.
 			
 		}
 		
 		// common code: 
+		// join the IP multicast group to get messages from leader.
+		IpMulticastServer multicastServer = new IpMulticastServer(this, multicastReplicaRecieve, multicastReplicaSend);
+		new Thread(multicastServer).start();
+		
 		// setup a udp killswitch.
 		
 		
@@ -59,7 +67,6 @@ public class Replica {
 		String out = server.getPlayerStatus(adminUserName, adminPassword, ipAddress);
 		System.out.println(out +"\n");
 		return out;
-		
 	}
 	
 	// ------------------------------------------------------------------------
@@ -179,7 +186,6 @@ public class Replica {
 			GameServer serv = GameServerHelper.narrow(naObj);
 			
 			return serv;
-		
 		}
 		
 		// ------------------------------------------------------------------------

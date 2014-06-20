@@ -27,6 +27,8 @@ public class ReplicaManager {
 		
 		udpWithLeader = new UdpLeaderComm(this, replicaManagerPort);
 		new Thread(udpWithLeader).start();
+		
+		
 	}
 	
 
@@ -51,8 +53,8 @@ public class ReplicaManager {
 	}
 
 	public void reboot(int replica) {
-		kill.shutdown(1);
-		starter.boot(1);
+		kill.shutdown(replica);
+		starter.boot(replica);
 	}
 
 	public static void main(String[] args) {

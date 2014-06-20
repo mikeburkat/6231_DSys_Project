@@ -28,10 +28,11 @@ public class Replica {
 	private int replicaManagerPort = 4002;
 	private int frontEndSendsFromPort = 6200;
 	private int frontEndRecieveInPort = 6201;
+	int basePort = 6210;
 	
 	// ------------------------------------------------------------------------
 	
-	public Replica(int rep) {
+	public Replica(int rep) throws IOException {
 		replicaID = rep;
 		InitServers servers = new InitServers(replicaID);
 		
@@ -68,6 +69,8 @@ public class Replica {
 		new Thread(multicastServer).start();
 		
 		// setup a udp killswitch.
+		UdpKillSwitch killSwitch = new UdpKillSwitch(this, basePort+replicaID);
+		
 		
 		
 	}

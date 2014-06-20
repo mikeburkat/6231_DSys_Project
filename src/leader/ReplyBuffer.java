@@ -11,26 +11,41 @@ public class ReplyBuffer {
 	private int currentId;
 	private ReplyData replies[];
 	private UdpReplicaManager manager;
+	private UdpFrontEnd frontEnd;
 	
-	public ReplyBuffer(int numberOfReplicas, UdpReplicaManager rm) {
+	public ReplyBuffer(int numberOfReplicas, UdpReplicaManager rm, UdpFrontEnd fe) {
 		manager = rm;
 		capacity = numberOfReplicas;
 		replies = new ReplyData[capacity];
+		clearBuffer();
 	}
 	
 	public void add(ReplyData rd) {
 		if (rd.requestId == currentId) {
+			if (replies[rd.replicaId] != null) { return; } // previous response still in there don't overwrite.
+			
 			replies[rd.replicaId] = rd;
 			size++;
 			if (size == capacity) {
-				String consensus = findMajority();
-				reportWrongs(consensus);
+				ReplyData consensus = findMajority();
+				reportWrongs(consensus.reply);
+				frontEnd.sendResponse(consensus);
+				clearBuffer();
+				currentId++;
+				size = 0;
 			}
+		} else {
+			// TODO Resolve the out of order responses.
 		}
 	}
 	
-	public String findMajority() {
-		String winner = null;
+	private void clearBuffer() {
+		for (int i = 0; i < capacity; i++) {
+			replies[i] = null;
+		}
+	}
+
+	public ReplyData findMajority() {
 		int majority = (capacity / 2) + 1 ;
 		for (int i = 0; i < majority; i++) {
 			int votes = 0;
@@ -41,11 +56,10 @@ public class ReplyBuffer {
 				}
 			}
 			if ( votes >= majority ) {
-				winner = candidate;
-				return winner;
+				return replies[i];
 			}
 		}
-		return winner;
+		return null;
 	}
 	
 	public void reportWrongs(String consensus) {

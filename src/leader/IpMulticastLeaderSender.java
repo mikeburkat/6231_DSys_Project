@@ -26,6 +26,7 @@ public class IpMulticastLeaderSender {
 	}
 	
 	public void send(RequestData data) {
+		System.out.println("Sending Multicast Request: " + data.toString());
 		// Serialize the message
 		ByteArrayOutputStream byteOutStream;
 		ObjectOutputStream objOut;

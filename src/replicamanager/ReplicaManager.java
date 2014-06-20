@@ -2,6 +2,8 @@ package replicamanager;
 
 import java.util.ArrayList;
 
+import frontend.FrontEnd;
+
 public class ReplicaManager {
 
 	private int numberOfReplicas = 3;
@@ -22,11 +24,12 @@ public class ReplicaManager {
 		for (int i = 0; i < numberOfReplicas; i++) {
 			starter.boot(i);
 		}
-
+		
 		udpWithLeader = new UdpLeaderComm(this, replicaManagerPort);
 		new Thread(udpWithLeader).start();
 	}
 	
+
 	public void incrementWrongs(ArrayList<Integer> wrong) {
 		
 		for (int i = 0; i < numberOfReplicas; i++) {
@@ -54,7 +57,9 @@ public class ReplicaManager {
 
 	public static void main(String[] args) {
 		ReplicaManager rm = new ReplicaManager();
-
+		
+		FrontEnd fe = new FrontEnd(null);
+		new Thread(fe).start();
 	}
 
 }

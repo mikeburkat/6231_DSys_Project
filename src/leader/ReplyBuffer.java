@@ -40,7 +40,7 @@ public class ReplyBuffer {
 			}
 		} else {
 			// TODO Resolve the out of order responses.
-			requests.resendPreviousRequest();
+			requests.sendCurrentRequest();
 		}
 	}
 	

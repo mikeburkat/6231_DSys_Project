@@ -42,7 +42,8 @@ public class PlayerClient {
 	// ------------------------------------------------------------------------
 
 	public boolean createPlayerAccount() {
-		System.out.println("create:" + userName + " " + password + " " + ipAddress + " ");
+		System.out.println("create:" + userName + " " + password + " "
+				+ ipAddress + " ");
 		GameServer server = findServer(ipAddress);
 
 		String out = server.createPlayerAccount(firstName, lastName, age,
@@ -58,7 +59,8 @@ public class PlayerClient {
 	public boolean playerSignIn() {
 		String out = "";
 		GameServer server = findServer(ipAddress);
-		System.out.println("signIn:" + userName + " " + password + " " + ipAddress + " ");
+		System.out.println("signIn:" + userName + " " + password + " "
+				+ ipAddress + " ");
 
 		out = server.playerSignIn(userName, password, ipAddress);
 		System.out.println(out + "\n");
@@ -79,51 +81,38 @@ public class PlayerClient {
 		return result;
 
 	}
-	
+
 	// ------------------------------------------------------------------------
-	
+
 	public boolean transferAccount(String newIpAddress) {
-		
+
 		GameServer server = findServer(ipAddress);
 		System.out.println("transfer:" + userName + " " + ipAddress + " ");
 
-		String out = server.transferAccount(userName, password, ipAddress, newIpAddress);
+		String out = server.transferAccount(userName, password, ipAddress,
+				newIpAddress);
 		System.out.println(out);
-		
+
 		boolean result = out.equals("Player was Transfered.");
 		return result;
 	}
 
 	// ------------------------------------------------------------------------
+	// TODO: convert this to find the front end server
+	// ------------------------------------------------------------------------
 
 	private GameServer findServer(String ip) {
 		GameServer server = null;
 		String s = null;
-		
+
 		boolean matches = Pattern.matches(
 				"^[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}$", ip);
 		if (!matches) {
 			System.out.println("Invalid IP address: " + ip);
 			return null;
 		}
-
-		s = ip.substring(0, 3);
 		try {
-			switch (s) {
-			case "132":
-				server = getServer("NA");
-				break;
-			case "93.":
-				server = getServer("EU");
-				break;
-			case "182":
-				server = getServer("AS");
-				break;
-			default:
-				System.out.println("Invalid IP address: " + ip);
-				break;
-			}
-			;
+			server = getServer("FE");
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
@@ -132,28 +121,29 @@ public class PlayerClient {
 	}
 
 	// ------------------------------------------------------------------------
-	
+	// TODO: convert this to get the front end server
+	// ------------------------------------------------------------------------
 	public GameServer getServer(String serverName) {
-		
+
 		String[] args = new String[1];
 		ORB orb = ORB.init(args, null);
 		BufferedReader br;
 		String na = null;
 		try {
-			br = new BufferedReader(new FileReader(serverName+".txt"));
+			br = new BufferedReader(new FileReader(serverName + ".txt"));
 			na = br.readLine();
 			br.close();
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		
+
 		org.omg.CORBA.Object naObj = orb.string_to_object(na);
 		GameServer serv = GameServerHelper.narrow(naObj);
-		
+
 		return serv;
-	
+
 	}
-	
+
 	// ------------------------------------------------------------------------
 
 }

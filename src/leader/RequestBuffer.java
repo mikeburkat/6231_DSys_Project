@@ -15,9 +15,10 @@ public class RequestBuffer {
 	}
 	
 	public void push(RequestData request) {
+		System.out.println("Pushing Request: " + request.toString());
 		requests.add(request);
 		if (requests.size() == 1) {
-			sendNextRequest();
+			sendCurrentRequest();
 		}
 	}
 	
@@ -29,9 +30,10 @@ public class RequestBuffer {
 		return requests.get(0);
 	}
 	
-	public void resendPreviousRequest() {
-		if (requests.size() > 0) 
+	public void sendCurrentRequest() {
+		if (requests.size() > 0) {
 			multicast.send( top() );
+		}
 	}
 	
 	public void sendNextRequest() {

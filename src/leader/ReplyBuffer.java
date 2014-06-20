@@ -12,9 +12,12 @@ public class ReplyBuffer {
 	private ReplyData replies[];
 	private UdpReplicaManager manager;
 	private UdpFrontEndRequestServer frontEnd;
+	private RequestBuffer requests;
 	
-	public ReplyBuffer(int numberOfReplicas, UdpReplicaManager rm, UdpFrontEndRequestServer fe) {
+	public ReplyBuffer(int numberOfReplicas, UdpReplicaManager rm, UdpFrontEndRequestServer fe, RequestBuffer req) {
 		manager = rm;
+		frontEnd = fe;
+		requests = req;
 		capacity = numberOfReplicas;
 		replies = new ReplyData[capacity];
 		clearBuffer();
@@ -33,9 +36,11 @@ public class ReplyBuffer {
 				clearBuffer();
 				currentId++;
 				size = 0;
+				requests.sendNextRequest();
 			}
 		} else {
 			// TODO Resolve the out of order responses.
+			requests.resendPreviousRequest();
 		}
 	}
 	

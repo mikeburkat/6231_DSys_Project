@@ -42,14 +42,14 @@ public class Replica {
 			IpMulticastLeaderSender multicastSender = new IpMulticastLeaderSender(multicastReplicaRecievePort);
 			
 			// setup request buffer
-			RequestBuffer request = new RequestBuffer(multicastSender);
+			RequestBuffer requests = new RequestBuffer(multicastSender);
 			
 			// setup link to get messages from front end.
-			UdpFrontEndRequestServer frontEnd = new UdpFrontEndRequestServer(request);
+			UdpFrontEndRequestServer frontEnd = new UdpFrontEndRequestServer(requests);
 			new Thread(frontEnd).start();
 			
 			// setup replyBuffer
-			ReplyBuffer replyBuffer = new ReplyBuffer(3, manager, frontEnd);
+			ReplyBuffer replyBuffer = new ReplyBuffer(3, manager, frontEnd, requests);
 			
 			// setup IP multicast group to recieve messages to other replicas.
 			IpMulticastLeaderReciever multicastReciever = new IpMulticastLeaderReciever(multicastReplicaSendPort, replyBuffer);

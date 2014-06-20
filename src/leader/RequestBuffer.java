@@ -29,9 +29,14 @@ public class RequestBuffer {
 		return requests.get(0);
 	}
 	
-	public void sendNextRequest() {
+	public void resendPreviousRequest() {
 		if (requests.size() > 0) 
 			multicast.send( top() );
 	}
-
+	
+	public void sendNextRequest() {
+		pop();
+		if (requests.size() > 0) 
+			multicast.send( top() );
+	}
 }

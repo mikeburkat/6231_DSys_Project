@@ -43,6 +43,9 @@ public class IpMulticastServer implements Runnable {
 		
 		byte objectBytes[] = new byte[1024];
 		
+		
+		// THERE IS PROBABLY AN ERROR HERE BECAUSE THIS
+		// WHILE TRUE LOOP IS MISPLACED?
 		while (true) {
 			// wait for request.
 			DatagramPacket message = new DatagramPacket(objectBytes, objectBytes.length);

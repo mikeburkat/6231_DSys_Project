@@ -91,6 +91,8 @@ public class GameServerImpl extends GameServerPOA {
 		initHashTable();
 		initUDPclients();
 		initUDPserver();
+		
+		log.addToServerLog("Initialization Successful.");
 	}
 
 	// ------------------------------------------------------------------------

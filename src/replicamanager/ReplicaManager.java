@@ -42,9 +42,20 @@ public class ReplicaManager implements Runnable {
 	@Override
 	public void run() {
 		
+		starter.boot(0);
+		starter.boot(1);
+		starter.boot(2);
+		
+		
 		udpWithLeader = new UdpLeaderComm(this);
 		udpWithLeader.waitForCommand();
 		
+	}
+	
+	public static void main(String[] args) {
+		ReplicaManager rm = new ReplicaManager();
+		
+		new Thread(rm).start();
 	}
 
 }

@@ -1,4 +1,4 @@
-package replica1;
+package threads;
 
 import gameserver.GameServer;
 import gameserver.GameServerHelper;
@@ -10,20 +10,46 @@ import java.util.regex.Pattern;
 
 import org.omg.CORBA.ORB;
 
-public class Replica implements Runnable {
+//----------------------------------------------------------------------------
+/**
+ * This is the administrator client. This represents one administrator.
+ * An administrator can get the player status.
+ * 
+ * @author Mike
+ */
+public class AdministratorStatusThread implements Runnable {
 
+	private String adminUserName;
+	private String adminPassword;
+	private String ipAddress;
 	
+	// ------------------------------------------------------------------------
 	
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		
+	public AdministratorStatusThread(String aUserN, String aPass, String ip) {
+		adminUserName = aUserN;
+		adminPassword = aPass;
+		ipAddress = ip;
 	}
 	
+	// ------------------------------------------------------------------------
 	
-	// TODO add all the mothods that need to be called on servers through the
-	// UDP multicast
+	public String getPlayerStatus(String aUserN, String aPass, String ip) {
+		adminUserName = aUserN;
+		adminPassword = aPass;
+		ipAddress = ip;
+		return getPlayerStatus();
+	}
 	
+	// ------------------------------------------------------------------------
+	
+	public String getPlayerStatus() {
+		GameServer server = findServer(ipAddress);
+		System.out.println(adminUserName +" "+ adminPassword +" "+ ipAddress + " ");
+		
+		String s = server.getPlayerStatus(adminUserName, adminPassword, ipAddress);
+		System.out.println(s +"\n");
+		return s;
+	}
 	
 	// ------------------------------------------------------------------------
 
@@ -83,6 +109,18 @@ public class Replica implements Runnable {
 		
 		return serv;
 	
+	}
+	
+	// ------------------------------------------------------------------------
+	
+	/**
+	 * This is only used for testing concurrency. It is called from the UnitTestClients
+	 */
+	@Override
+	public void run() {
+		for (int i = 0; i < 5; i++) {
+			getPlayerStatus();
+		}
 	}
 	
 	// ------------------------------------------------------------------------

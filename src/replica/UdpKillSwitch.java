@@ -1,4 +1,4 @@
-package replica1;
+package replica;
 
 public class UdpKillSwitch {
 

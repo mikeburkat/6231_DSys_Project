@@ -1,11 +1,14 @@
 package replicamanager;
 
-public class StartReplica {
+import replica.Replica;
 
+
+
+
+public class StartReplica {
 	
-	public void boot(int i) {
-		// TODO Auto-generated method stub
-		
+	public void boot(int rep) {
+		Replica replica = new Replica(rep);
 	}
 
 }

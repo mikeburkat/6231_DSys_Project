@@ -15,20 +15,26 @@ import org.omg.PortableServer.POAPackage.WrongPolicy;
 
 public class EuropeServer implements Runnable {
 
-	public static void main(String[] args) throws InvalidName, ServantAlreadyActive, WrongPolicy, ObjectNotActive, FileNotFoundException, AdapterInactive {
+	private int replica = 0;
 	
-		ORB orb = ORB.init(args, null);
+	public EuropeServer(int r) {
+		replica = r;
+	}
+
+	public void setup() throws InvalidName, ServantAlreadyActive, WrongPolicy, ObjectNotActive, FileNotFoundException, AdapterInactive {
+		
+		ORB orb = ORB.init((String[]) null, null);
 		POA rootPOA = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
 		
 		
-		GameServerImpl gs = new GameServerImpl("EU", 2031, 2030, 2031);
+		GameServerImpl gs = new GameServerImpl("EU"+replica, 2031+(100*replica), 2030+(100*replica), 2032+(100*replica));
 		byte[] id = rootPOA.activate_object(gs);
 		org.omg.CORBA.Object ref = rootPOA.id_to_reference(id);
 		
 		String ior = orb.object_to_string(ref);
 		System.out.println(ior);
 		
-		PrintWriter file = new PrintWriter("EU.txt");
+		PrintWriter file = new PrintWriter("EU"+replica+".txt");
 		file.println(ior);
 		file.close();
 		
@@ -40,7 +46,7 @@ public class EuropeServer implements Runnable {
 	@Override
 	public void run() {
 			try {
-				main(null);
+				setup();
 			} catch (InvalidName | ServantAlreadyActive | WrongPolicy
 					| ObjectNotActive | FileNotFoundException | AdapterInactive e) {
 				e.printStackTrace();

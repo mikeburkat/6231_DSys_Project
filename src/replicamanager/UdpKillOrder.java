@@ -6,8 +6,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 
-
-
 public class UdpKillOrder {
 
 	private int replica0basePort = 6100;

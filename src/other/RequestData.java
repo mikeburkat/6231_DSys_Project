@@ -4,7 +4,7 @@ public class RequestData {
 	
 	public String command;
 	public String clientId;
-	public String requestId;
+	public int requestId;
 	
 	public String firstName;
 	public String lastName;

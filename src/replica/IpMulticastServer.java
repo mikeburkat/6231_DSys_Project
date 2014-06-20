@@ -17,7 +17,8 @@ public class IpMulticastServer implements Runnable {
 	private MulticastSocket reciever = null;
 	private MulticastSocket sender = null;
 	private Replica replica;
-	InetAddress group = null;
+	private InetAddress groupRecieve = null;
+	private InetAddress groupSend = null;
 	int inPort;
 	int outPort;
 	
@@ -26,10 +27,11 @@ public class IpMulticastServer implements Runnable {
 		inPort = recievePort;
 		outPort = sendPort;
 		try {
+			groupRecieve = InetAddress.getByName("224.0.222.0");
 			reciever = new MulticastSocket(recievePort);
-			group = InetAddress.getByName("224.0.222.0");
-			reciever.joinGroup(group);
+			reciever.joinGroup(groupRecieve);
 			
+			groupSend = InetAddress.getByName("224.0.221.0");
 			sender = new MulticastSocket();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -91,6 +93,7 @@ public class IpMulticastServer implements Runnable {
 			ReplyData reply = new ReplyData();
 			reply.requestId = request.requestId;
 			reply.clientId = request.clientId;
+			reply.replicaId = replica.getID();
 			reply.reply = result;
 			
 			ByteArrayOutputStream byteOutStream;
@@ -109,7 +112,7 @@ public class IpMulticastServer implements Runnable {
 			}
 
 			// send back response.
-			DatagramPacket replyMessage = new DatagramPacket(replyBytes, replyBytes.length, group, outPort);
+			DatagramPacket replyMessage = new DatagramPacket(replyBytes, replyBytes.length, groupSend, outPort);
 			try {
 				sender.send(replyMessage);
 			} catch (IOException e) {

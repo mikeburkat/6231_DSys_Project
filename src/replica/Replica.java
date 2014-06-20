@@ -7,6 +7,8 @@ import java.util.regex.Pattern;
 
 import leader.IpMulticastLeaderReciever;
 import leader.IpMulticastLeaderSender;
+import leader.ReplyBuffer;
+import leader.UdpReplicaManager;
 
 import org.omg.CORBA.ORB;
 
@@ -18,26 +20,29 @@ import gameserver.InitServers;
 
 public class Replica {
 
-	private int replica;
+	private int replicaID;
 	private int multicastReplicaRecieve = 4000;
 	private int multicastReplicaSend = 4001;
+	private int replicaManagerPort = 4002;
 	
 	// ------------------------------------------------------------------------
 	
 	public Replica(int rep) {
-		replica = rep;
-		InitServers servers = new InitServers(replica);
+		replicaID = rep;
+		InitServers servers = new InitServers(replicaID);
 		
-		if (replica == 0) {
+		if (replicaID == 0) {
 			// do leader code: 
 			// setup link to Replica Manger.
-			
+			UdpReplicaManager manager = new UdpReplicaManager(4002);
 			// setup link to get messages from front end.
 			
+			// setup replyBuffer
+			ReplyBuffer replyBuffer = new ReplyBuffer(3, manager);
 			
 			// setup IP multicast group to send messages to other replicas.
 			IpMulticastLeaderSender multicastSender = new IpMulticastLeaderSender(multicastReplicaRecieve);
-			IpMulticastLeaderReciever multicastReciever = new IpMulticastLeaderReciever(multicastReplicaSend);
+			IpMulticastLeaderReciever multicastReciever = new IpMulticastLeaderReciever(multicastReplicaSend, replyBuffer);
 			
 			
 			
@@ -146,13 +151,13 @@ public class Replica {
 			try {
 				switch (s) {
 				case "132":
-					server = getServer("NA"+replica);
+					server = getServer("NA"+replicaID);
 					break;
 				case "93.":
-					server = getServer("EU"+replica);
+					server = getServer("EU"+replicaID);
 					break;
 				case "182":
-					server = getServer("AS"+replica);
+					server = getServer("AS"+replicaID);
 					break;
 				default:
 					System.out.println("Invalid IP address: " + ip);
@@ -186,6 +191,10 @@ public class Replica {
 			GameServer serv = GameServerHelper.narrow(naObj);
 			
 			return serv;
+		}
+
+		public int getID() {
+			return replicaID;
 		}
 		
 		// ------------------------------------------------------------------------

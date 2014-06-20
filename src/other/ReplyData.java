@@ -3,11 +3,12 @@ package other;
 public class ReplyData {
 	
 	public String clientId;
-	public String requestId;
+	public int requestId;
+	public int replicaId;
 	public String reply;
 	
 	public String toString() {
-		return "Client ID: " + clientId + " Request ID: " + requestId + " Reply: " + reply;
+		return "Client ID: " + clientId + " Request ID: " + requestId + " Replica ID: " + replicaId + " Reply: " + reply;
 	}
 
 }

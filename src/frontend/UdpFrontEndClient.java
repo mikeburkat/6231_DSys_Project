@@ -5,7 +5,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
-public class UdFrontEndClient {
+public class UdpFrontEndClient {
 	String getPlayerStatusRequest;
 	int portNum;
 	DatagramSocket clientSocket;
@@ -15,7 +15,7 @@ public class UdFrontEndClient {
 	DatagramPacket sendPacket;
 	DatagramPacket receivePacket;
 	String result;
-	public UdFrontEndClient(String getPlayerStatusRequest, int portNum) {
+	public UdpFrontEndClient(String getPlayerStatusRequest, int portNum) {
 		// TODO Auto-generated constructor stub
 		this.getPlayerStatusRequest = getPlayerStatusRequest;
 		this.portNum = portNum;

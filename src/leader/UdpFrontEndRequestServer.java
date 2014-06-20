@@ -1,11 +1,15 @@
 package leader;
 
 import other.ReplyData;
+import other.RequestData;
 
 public class UdpFrontEndRequestServer implements Runnable {
-
-	public UdpFrontEndRequestServer() {
-		
+	
+	RequestBuffer requests;
+	
+	public UdpFrontEndRequestServer(RequestBuffer req) {
+	
+		requests = req;
 	}
 	
 	
@@ -13,6 +17,12 @@ public class UdpFrontEndRequestServer implements Runnable {
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
+		
+		
+		RequestData request = null; // de-serialized object
+		
+		
+		
 		
 	}
 

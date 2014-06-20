@@ -26,38 +26,11 @@ public class UDPclientTransfer {
 		udpPort = udp;
 	}
 
-	public String getStatus() {
-		String out = "";
-		try {
-			String s = "status";
-			byte[] a = s.getBytes();
-			socket = new DatagramSocket();
-			host = InetAddress.getByName("localhost");
-			request = new DatagramPacket(a, s.length(), host, udpPort);
-
-			socket.send(request);
-			byte[] buffer = new byte[1000];
-			DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
-			socket.receive(reply);
-			String status = new String(reply.getData());
-			out = status.trim();
-
-		} catch (IOException e) {
-			out = "crash in client call";
-			e.printStackTrace();
-		} finally {
-			if (socket != null) {
-				socket.close();
-			}
-		}
-		return out;
-	}
-
 	public String transferPlayer(PlayerData pd) {
 		String out;
 		ByteArrayOutputStream byteOutStream;
 		ObjectOutputStream objOut;
-		byte[] pBytes = null;
+		byte[] objectBytes = null;
 
 		try {
 			byteOutStream = new ByteArrayOutputStream();
@@ -65,12 +38,12 @@ public class UDPclientTransfer {
 
 			objOut.writeObject(pd);
 			objOut.flush();
-			pBytes = byteOutStream.toByteArray();
+			objectBytes = byteOutStream.toByteArray();
 
 			socket = new DatagramSocket();
 			host = InetAddress.getByName("localhost");
-			System.out.println("playerData length: " + pBytes.length);
-			request = new DatagramPacket(pBytes, pBytes.length, host, udpPort);
+			System.out.println("playerData length: " + objectBytes.length);
+			request = new DatagramPacket(objectBytes, objectBytes.length, host, udpPort);
 			socket.send(request);
 			
 			byte[] buffer = new byte[1024];

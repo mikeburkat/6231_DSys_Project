@@ -5,6 +5,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
+import leader.IpMulticastLeader;
+import leader.IpMulticastLeaderReciever;
+
 import org.omg.CORBA.ORB;
 
 import gameserver.GameServer;
@@ -16,6 +19,8 @@ import gameserver.InitServers;
 public class Replica {
 
 	private int replica;
+	private int multicastReplicaRecieve = 4000;
+	private int multicastReplicaSend = 4001;
 	
 	// ------------------------------------------------------------------------
 	
@@ -27,14 +32,20 @@ public class Replica {
 			// do leader code: 
 			// setup link to get messages from front end.
 			// setup link to Replica Manger.
-			// setup IP multicast group to sent messages to other replicas.
+			// setup IP multicast group to send messages to other replicas.
+			IpMulticastLeaderSender multicastSender = new IpMulticastLeaderSender(multicastReplicaRecieve);
+			IpMulticastLeaderReciever multicastReciever = new IpMulticastLeaderReciever(multicastReplicaSend);
 			
 			
 		} else {
-			// do backup code.
+			// do backup code:
 			// join the IP multicast group to get messages from leader.
 			
 		}
+		
+		// common code: 
+		// setup a udp killswitch.
+		
 		
 	}
 	

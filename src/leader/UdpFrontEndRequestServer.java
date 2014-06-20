@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.util.ArrayList;
 
 import other.ReplyData;
@@ -13,13 +14,15 @@ import other.RequestData;
 public class UdpFrontEndRequestServer implements Runnable {
 
 	private RequestBuffer requests;
-	private int frontEndReplyPort;
+	private int frontEndSendsFromPort;
+	private int frontEndRecieveInPort;
 	private DatagramSocket socket;
 	private int requestID;
 
-	public UdpFrontEndRequestServer(int port, RequestBuffer req) {
+	public UdpFrontEndRequestServer(int requestPort, int replyPort, RequestBuffer req) {
 		requests = req;
-		frontEndReplyPort = port;
+		frontEndRecieveInPort = requestPort;
+		frontEndSendsFromPort = replyPort;
 		requestID = 0;
 	}
 
@@ -27,7 +30,7 @@ public class UdpFrontEndRequestServer implements Runnable {
 	public void run() {
 		try {
 			byte[] buffer = new byte[1024];
-			socket = new DatagramSocket(frontEndReplyPort);
+			socket = new DatagramSocket(frontEndRecieveInPort);
 
 			while (true) {
 				DatagramPacket packet = new DatagramPacket(buffer,
@@ -94,7 +97,20 @@ public class UdpFrontEndRequestServer implements Runnable {
 	}
 
 	public void sendResponse(ReplyData consensus) {
-
+		try {	
+			String s = consensus.clientId + "," + consensus.reply;
+			byte[] a = s.getBytes();
+			socket = new DatagramSocket();
+			InetAddress host = InetAddress.getByName("localhost");
+			DatagramPacket request = new DatagramPacket(a, s.length(), host, frontEndSendsFromPort);
+			socket.send(request);
+		} catch (IOException e) {
+			System.out.println("crash in send response from leader to front end udp call");
+			e.printStackTrace();
+		} finally { 
+			if (socket != null) {
+				socket.close();
+			}
+		}
 	}
-
 }

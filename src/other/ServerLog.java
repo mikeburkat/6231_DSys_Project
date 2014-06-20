@@ -23,7 +23,6 @@ public class ServerLog {
 
 	public ServerLog(String sN) {
 		serverName = sN;
-		resetServerLogs(); 
 		initServerLog();
 	}
 
@@ -101,14 +100,6 @@ public class ServerLog {
 						+ serverFolder.getAbsolutePath());
 			}
 		}
-	}
-	
-	//------------------------------------------------------------------------
-	
-	private void resetServerLogs() {
-		
-		System.out.println("You may want to reset logs manually for " + serverName);
-		
 	}
 	
 	//------------------------------------------------------------------------

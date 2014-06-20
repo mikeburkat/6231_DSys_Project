@@ -77,7 +77,7 @@ public class GameServerImpl extends GameServerPOA {
 		int portNum = 6200;
 		String playerSignOutResult;
 		String PLAYER_SIGNOUT_FAIL = "PLAYER_SIGNOUT_FAIL";
-		String playerSignOutRequest = "signOut" + "," + userName + "," + "ipAddress";
+		String playerSignOutRequest = "signOut" + "," + userName + "," + ipAddress;
 		UdpFrontEndClient udpClient = new UdpFrontEndClient(playerSignOutRequest, portNum);
 		try {
 			udpClient.UDPSend();
@@ -117,7 +117,7 @@ public class GameServerImpl extends GameServerPOA {
 		int portNum = 6200;
 		String suspendAccountResult;
 		String SUSPEND_ACCOUNT_FAIL = "SUSPEND_ACCOUNT_FAIL";
-		String suspendAccountRequest = "suspend" + "," + adminUserName + "," + ipAddress + "," + userNameToSuspend;
+		String suspendAccountRequest = "suspend" + "," + adminUserName + "," + adminPassword + "," + ipAddress + "," + userNameToSuspend;
 		UdpFrontEndClient udpClient = new UdpFrontEndClient(suspendAccountRequest, portNum);
 		try {
 			udpClient.UDPSend();

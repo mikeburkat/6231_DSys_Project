@@ -26,6 +26,7 @@ public class Replica {
 	private int multicastReplicaRecievePort = 4000;
 	private int multicastReplicaSendPort = 4001;
 	private int replicaManagerPort = 4002;
+	private int frontEndReplyPort = 6201;
 	
 	// ------------------------------------------------------------------------
 	
@@ -45,7 +46,7 @@ public class Replica {
 			RequestBuffer requests = new RequestBuffer(multicastSender);
 			
 			// setup link to get messages from front end.
-			UdpFrontEndRequestServer frontEnd = new UdpFrontEndRequestServer(requests);
+			UdpFrontEndRequestServer frontEnd = new UdpFrontEndRequestServer(frontEndReplyPort, requests);
 			new Thread(frontEnd).start();
 			
 			// setup replyBuffer

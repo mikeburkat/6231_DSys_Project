@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 import leader.IpMulticastLeaderReciever;
 import leader.IpMulticastLeaderSender;
 import leader.ReplyBuffer;
-import leader.UdpFrontEnd;
+import leader.UdpFrontEndRequestServer;
 import leader.UdpReplicaManager;
 
 import org.omg.CORBA.ORB;
@@ -37,7 +37,7 @@ public class Replica {
 			// setup link to Replica Manger.
 			UdpReplicaManager manager = new UdpReplicaManager(4002);
 			// setup link to get messages from front end.
-			UdpFrontEnd frontEnd = new UdpFrontEnd();
+			UdpFrontEndRequestServer frontEnd = new UdpFrontEndRequestServer();
 			// setup replyBuffer
 			ReplyBuffer replyBuffer = new ReplyBuffer(3, manager, frontEnd);
 			

@@ -11,9 +11,9 @@ public class ReplyBuffer {
 	private int currentId;
 	private ReplyData replies[];
 	private UdpReplicaManager manager;
-	private UdpFrontEnd frontEnd;
+	private UdpFrontEndRequestServer frontEnd;
 	
-	public ReplyBuffer(int numberOfReplicas, UdpReplicaManager rm, UdpFrontEnd fe) {
+	public ReplyBuffer(int numberOfReplicas, UdpReplicaManager rm, UdpFrontEndRequestServer fe) {
 		manager = rm;
 		capacity = numberOfReplicas;
 		replies = new ReplyData[capacity];

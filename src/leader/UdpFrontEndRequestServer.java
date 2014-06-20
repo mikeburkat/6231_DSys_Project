@@ -2,9 +2,9 @@ package leader;
 
 import other.ReplyData;
 
-public class UdpFrontEnd implements Runnable {
+public class UdpFrontEndRequestServer implements Runnable {
 
-	public UdpFrontEnd() {
+	public UdpFrontEndRequestServer() {
 		
 	}
 	

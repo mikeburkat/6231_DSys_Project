@@ -37,6 +37,8 @@ public class IpMulticastLeaderSender {
 			objOut = new ObjectOutputStream(byteOutStream);
 			objOut.writeObject(data);
 			objOut.flush();
+			objOut.close();
+			byteOutStream.close();
 			request = byteOutStream.toByteArray();
 		} catch (IOException e) {
 			e.printStackTrace();

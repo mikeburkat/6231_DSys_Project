@@ -13,7 +13,7 @@ import other.ReplyData;
 import other.RequestData;
 
 public class IpMulticastServer implements Runnable {
-	
+
 	private MulticastSocket reciever = null;
 	private MulticastSocket sender = null;
 	private Replica replica;
@@ -21,16 +21,16 @@ public class IpMulticastServer implements Runnable {
 	private InetAddress groupSend = null;
 	int inPort;
 	int outPort;
-	
+
 	public IpMulticastServer(Replica rep, int recievePort, int sendPort) {
 		replica = rep;
 		inPort = recievePort;
 		outPort = sendPort;
 		try {
 			groupRecieve = InetAddress.getByName("224.0.222.0");
-			reciever = new MulticastSocket(recievePort);
+			reciever = new MulticastSocket(inPort);
 			reciever.joinGroup(groupRecieve);
-			
+
 			groupSend = InetAddress.getByName("224.0.221.0");
 			sender = new MulticastSocket();
 		} catch (IOException e) {
@@ -40,94 +40,98 @@ public class IpMulticastServer implements Runnable {
 
 	@Override
 	public void run() {
+
 		
-		byte objectBytes[] = new byte[1024];
 		
-		
-		// THERE IS PROBABLY AN ERROR HERE BECAUSE THIS
-		// WHILE TRUE LOOP IS MISPLACED?
-		while (true) {
-			// wait for request.
-			DatagramPacket message = new DatagramPacket(objectBytes, objectBytes.length);
-			try {
+		try {
+			while (true) {
+				byte objectBytes[] = new byte[4096];
+				ByteArrayInputStream baos = new ByteArrayInputStream(objectBytes);
+				DatagramPacket message = new DatagramPacket(objectBytes, objectBytes.length);
 				reciever.receive(message);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-			// de-serialize request object
-			ByteArrayInputStream baos;
-			ObjectInputStream oos;
-			RequestData request = null;
-			try {
-				baos = new ByteArrayInputStream(objectBytes);
-				oos = new ObjectInputStream(baos);
-				request = (RequestData) oos.readObject();
-				System.out.println(request.toString());
-			} catch (ClassNotFoundException | IOException e) {
-				System.out.println(e.getMessage());
-				e.printStackTrace();
-			}
-			
-			// process request
-			String result = null;
-			switch(request.command){
-			case "create":
-				result = replica.createPlayerAccount(request.firstName, request.lastName, request.age, request.userName, request.password, request.ipAddress);
-				break;
-			case "signIn":
-				result = replica.playerSignIn(request.userName, request.password, request.ipAddress);
-				break;
-			case "signOut":
-				result = replica.playerSignOut(request.userName, request.ipAddress);
-				break;
-			case "getStatus":
-				result = replica.getPlayerStatus(request.userName, request.password, request.ipAddress);
-				break;
-			case "transfer":
-				result = replica.transferAccount(request.userName, request.password, request.ipAddress, request.newIpAddress);
-				break;
-			case "suspend":
-				result = replica.suspendAccount(request.userName, request.password, request.ipAddress, request.userToSuspend);
-				break;
-			}
-			
-			// form reply
-			ReplyData reply = new ReplyData();
-			reply.requestId = request.requestId;
-			reply.clientId = request.clientId;
-			reply.replicaId = replica.getID();
-			reply.reply = result;
-			
-			ByteArrayOutputStream byteOutStream;
-			ObjectOutputStream objOut;
-			byte[] replyBytes = null;
-
-			try {
-				byteOutStream = new ByteArrayOutputStream();
-				objOut = new ObjectOutputStream(byteOutStream);
-
-				objOut.writeObject(reply);
-				objOut.flush();
-				replyBytes = byteOutStream.toByteArray();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			// send back response.
-			DatagramPacket replyMessage = new DatagramPacket(replyBytes, replyBytes.length, groupSend, outPort);
-			try {
-				sender.send(replyMessage);
-			} catch (IOException e) {
-				e.printStackTrace();
-			} finally {
-				if (sender != null) {
-					sender.close();
+				// de-serialize request object
+				RequestData request = null;
+				try {
+					ObjectInputStream oos = new ObjectInputStream(baos);
+					RequestData r = (RequestData) oos.readObject();
+					message.setLength(objectBytes.length); // must reset length field!
+					baos.reset();
+					System.out.println(r.toString());
+					
+				} catch (ClassNotFoundException | IOException e) {
+					System.out.println(e.getMessage());
+					e.printStackTrace();
 				}
+				if (request == null) { return ;}
+
+				// process request
+				String result = null;
+				switch (request.command) {
+				case "create":
+					result = replica.createPlayerAccount(request.firstName,
+							request.lastName, request.age, request.userName,
+							request.password, request.ipAddress);
+					break;
+				case "signIn":
+					result = replica.playerSignIn(request.userName,
+							request.password, request.ipAddress);
+					break;
+				case "signOut":
+					result = replica.playerSignOut(request.userName,
+							request.ipAddress);
+					break;
+				case "getStatus":
+					result = replica.getPlayerStatus(request.userName,
+							request.password, request.ipAddress);
+					break;
+				case "transfer":
+					result = replica.transferAccount(request.userName,
+							request.password, request.ipAddress,
+							request.newIpAddress);
+					break;
+				case "suspend":
+					result = replica.suspendAccount(request.userName,
+							request.password, request.ipAddress,
+							request.userToSuspend);
+					break;
+				}
+
+				// form reply
+				ReplyData reply = new ReplyData();
+				reply.requestId = request.requestId;
+				reply.clientId = request.clientId;
+				reply.replicaId = replica.getID();
+				reply.reply = result;
+
+				ByteArrayOutputStream byteOutStream;
+				ObjectOutputStream objOut;
+				byte[] replyBytes = null;
+
+				try {
+					byteOutStream = new ByteArrayOutputStream();
+					objOut = new ObjectOutputStream(byteOutStream);
+
+					objOut.writeObject(reply);
+					objOut.flush();
+					replyBytes = byteOutStream.toByteArray();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+				// send back response.
+				DatagramPacket replyMessage = new DatagramPacket(replyBytes,
+						replyBytes.length, groupSend, outPort);
+				sender.send(replyMessage);
+
 			}
-			
-			
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (sender != null) {
+				sender.close();
+			}
 		}
+
 	}
 
 }

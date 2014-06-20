@@ -45,8 +45,6 @@ public class Replica {
 			IpMulticastLeaderReciever multicastReciever = new IpMulticastLeaderReciever(multicastReplicaSend, replyBuffer);
 			
 			
-			
-			
 		} else {
 			// do backup code:
 			

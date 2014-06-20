@@ -1,32 +1,46 @@
 package replicamanager;
 
-public class ReplicaManager implements Runnable {
+import java.util.ArrayList;
 
+public class ReplicaManager {
+
+	private int numberOfReplicas = 3;
 	private int replicas[];
-	private UdpKillOrder kill; 
+	private UdpKillOrder kill;
 	private StartReplica starter;
 	private UdpLeaderComm udpWithLeader;
-	
+	private int replicaManagerPort = 4002;
+
 	public ReplicaManager() {
-		replicas = new int[3];
+		replicas = new int[numberOfReplicas];
+
 		resetAllCounts();
 		kill = new UdpKillOrder();
 		starter = new StartReplica();
+		
+		
+		for (int i = 0; i < numberOfReplicas; i++) {
+			starter.boot(i);
+		}
+
+		udpWithLeader = new UdpLeaderComm(this, replicaManagerPort);
+		new Thread(udpWithLeader).start();
 	}
 	
-	public void replicaError(int replica) {
-		if ( replica <= 0 && replica < replicas.length) {
-			int temp = ++replicas[replica];
-			resetAllCounts();
-			
-			if (temp == 3) {
-				reboot(replica);
+	public void incrementWrongs(ArrayList<Integer> wrong) {
+		
+		for (int i = 0; i < numberOfReplicas; i++) {
+			if (wrong.contains(i)) {
+				replicas[i]++;
+				if (replicas[i] == 3) {
+					reboot(i);
+				}
 			} else {
-				replicas[replica] = temp;
+				replicas[i] = 0;
 			}
 		}
 	}
-	
+
 	public void resetAllCounts() {
 		for (int i = 0; i < replicas.length; i++) {
 			replicas[i] = 0;
@@ -37,25 +51,10 @@ public class ReplicaManager implements Runnable {
 		kill.shutdown(1);
 		starter.boot(1);
 	}
-	
-	
-	@Override
-	public void run() {
-		
-		starter.boot(0);
-		starter.boot(1);
-		starter.boot(2);
-		
-		
-		udpWithLeader = new UdpLeaderComm(this);
-		udpWithLeader.waitForCommand();
-		
-	}
-	
+
 	public static void main(String[] args) {
 		ReplicaManager rm = new ReplicaManager();
-		
-		new Thread(rm).start();
+
 	}
 
 }

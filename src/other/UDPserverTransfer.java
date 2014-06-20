@@ -17,9 +17,9 @@ import java.net.SocketException;
  */
 public class UDPserverTransfer implements Runnable {
 
-	DatagramSocket socket;
-	GameServerImpl gameServer;
-	int UDPserverPort;
+	private DatagramSocket socket;
+	private GameServerImpl gameServer;
+	private int UDPserverPort;
 
 	public UDPserverTransfer(GameServerImpl gs, int udp) {
 		gameServer = gs;

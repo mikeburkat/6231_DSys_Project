@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 import leader.IpMulticastLeaderReciever;
 import leader.IpMulticastLeaderSender;
 import leader.ReplyBuffer;
+import leader.RequestBuffer;
 import leader.UdpFrontEndRequestServer;
 import leader.UdpReplicaManager;
 
@@ -22,8 +23,8 @@ import gameserver.InitServers;
 public class Replica {
 
 	private int replicaID;
-	private int multicastReplicaRecieve = 4000;
-	private int multicastReplicaSend = 4001;
+	private int multicastReplicaRecievePort = 4000;
+	private int multicastReplicaSendPort = 4001;
 	private int replicaManagerPort = 4002;
 	
 	// ------------------------------------------------------------------------
@@ -36,15 +37,23 @@ public class Replica {
 			// do leader code: 
 			// setup link to Replica Manger.
 			UdpReplicaManager manager = new UdpReplicaManager(4002);
+			
+			// setup IP multicast group to send messages to other replicas.
+			IpMulticastLeaderSender multicastSender = new IpMulticastLeaderSender(multicastReplicaRecievePort);
+			
+			// setup request buffer
+			RequestBuffer request = new RequestBuffer(multicastSender);
+			
 			// setup link to get messages from front end.
-			UdpFrontEndRequestServer frontEnd = new UdpFrontEndRequestServer();
+			UdpFrontEndRequestServer frontEnd = new UdpFrontEndRequestServer(request);
+			new Thread(frontEnd).start();
+			
 			// setup replyBuffer
 			ReplyBuffer replyBuffer = new ReplyBuffer(3, manager, frontEnd);
 			
-			// setup IP multicast group to send messages to other replicas.
-			IpMulticastLeaderSender multicastSender = new IpMulticastLeaderSender(multicastReplicaRecieve);
-			IpMulticastLeaderReciever multicastReciever = new IpMulticastLeaderReciever(multicastReplicaSend, replyBuffer);
-			
+			// setup IP multicast group to recieve messages to other replicas.
+			IpMulticastLeaderReciever multicastReciever = new IpMulticastLeaderReciever(multicastReplicaSendPort, replyBuffer);
+			new Thread(multicastReciever).start();
 			
 		} else {
 			// do backup code:
@@ -53,7 +62,7 @@ public class Replica {
 		
 		// common code: 
 		// join the IP multicast group to get messages from leader.
-		IpMulticastServer multicastServer = new IpMulticastServer(this, multicastReplicaRecieve, multicastReplicaSend);
+		IpMulticastServer multicastServer = new IpMulticastServer(this, multicastReplicaRecievePort, multicastReplicaSendPort);
 		new Thread(multicastServer).start();
 		
 		// setup a udp killswitch.

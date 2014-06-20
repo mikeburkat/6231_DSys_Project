@@ -8,7 +8,7 @@ public class UdpFrontEndRequestServer implements Runnable {
 	RequestBuffer requests;
 	
 	public UdpFrontEndRequestServer(RequestBuffer req) {
-	
+		
 		requests = req;
 	}
 	

@@ -16,11 +16,11 @@ import java.net.InetAddress;
  */
 public class UDPclientTransfer {
 
-	DatagramSocket socket;
-	DatagramPacket request;
-	int udpPort;
-	InetAddress host;
-
+	private DatagramSocket socket;
+	private DatagramPacket request;
+	private InetAddress host;
+	private int udpPort;
+	
 	public UDPclientTransfer(int udp) {
 		socket = null;
 		udpPort = udp;

@@ -92,7 +92,11 @@ public class Replica {
 	public String createPlayerAccount(String firstName, String lastName,
 			short age, String userName, String password, String ipAddress) {
 		GameServer server = findServer(ipAddress);
-
+		
+		if (userName.equals("crash"+replicaID)) { 
+			return "Sending Wrong response back on purpose"; 
+		}
+		
 		String out = server.createPlayerAccount(firstName, lastName, age,
 				userName, password, ipAddress);
 		System.out.println(out + "\n");

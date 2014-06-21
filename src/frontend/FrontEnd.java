@@ -51,27 +51,6 @@ public class FrontEnd implements Runnable {
 			
 			rootPOA.the_POAManager().activate();
 			orb.run();
-			
-			
-//			addobj.setORB(orb);
-//
-//			// get object reference from the servant
-//			org.omg.CORBA.Object ref = rootpoa.servant_to_reference(addobj);
-//			GameServer href = GameServerHelper.narrow(ref);
-//
-//			org.omg.CORBA.Object objRef = orb
-//					.resolve_initial_references("NameService");
-//			NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
-//
-//			NameComponent path[] = ncRef.to_name("ABC");
-//			ncRef.rebind(path, href);
-//			
-//			
-//			System.out.println("Front End CORBA Server ready and waiting");
-//
-//			// wait for invocations from clients
-//			orb.run();
-
 		} catch (InvalidName | ServantAlreadyActive | WrongPolicy
 				| ObjectNotActive | FileNotFoundException | AdapterInactive e) {
 			e.printStackTrace();

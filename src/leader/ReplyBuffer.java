@@ -31,6 +31,7 @@ public class ReplyBuffer {
 			size++;
 			if (size == capacity) {
 				ReplyData consensus = findMajority();
+				System.out.println(consensus.reply);
 				reportWrongs(consensus.reply);
 				frontEnd.sendResponse(consensus);
 				clearBuffer();
@@ -55,12 +56,13 @@ public class ReplyBuffer {
 		for (int i = 0; i < majority; i++) {
 			int votes = 0;
 			String candidate = replies[i].reply;
-			for (int j = 0; j < majority; j++) {
+			for (int j = 0; j < size; j++) {
 				if ( candidate.equals(replies[j].reply) ){
 					votes++;
 				}
 			}
 			if ( votes >= majority ) {
+				System.out.println("Majority reply: " + replies[i].toString());
 				return replies[i];
 			}
 		}
@@ -71,10 +73,11 @@ public class ReplyBuffer {
 		ArrayList<Integer> wrong = new ArrayList<Integer>();
 		
 		for (int i = 0; i < capacity; i++) {
-			if (!replies[i].equals(consensus)) {
+			if (!consensus.equals(replies[i].reply)) {
 				wrong.add(i);
 			}
 		}
+		System.out.println("Wrong replicas are: " + wrong.toString());
 		manager.report(wrong);
 	}
 

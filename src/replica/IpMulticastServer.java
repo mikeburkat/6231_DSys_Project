@@ -40,9 +40,6 @@ public class IpMulticastServer implements Runnable {
 
 	@Override
 	public void run() {
-
-		
-		
 		try {
 			while (true) {
 				byte objectBytes[] = new byte[4096];
@@ -57,7 +54,7 @@ public class IpMulticastServer implements Runnable {
 					message.setLength(objectBytes.length); // must reset length field!
 					baos.reset();
 					System.out.println(r.toString());
-					
+					request = r;
 				} catch (ClassNotFoundException | IOException e) {
 					System.out.println(e.getMessage());
 					e.printStackTrace();

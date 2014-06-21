@@ -19,7 +19,6 @@ public class IpMulticastLeaderSender {
 		outPort = port;
 		try {
 			group = InetAddress.getByName("224.0.222.0");
-			multicast = new MulticastSocket();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -33,6 +32,7 @@ public class IpMulticastLeaderSender {
 		byte[] request = null;
 
 		try {
+			multicast = new MulticastSocket();
 			byteOutStream = new ByteArrayOutputStream();
 			objOut = new ObjectOutputStream(byteOutStream);
 			objOut.writeObject(data);

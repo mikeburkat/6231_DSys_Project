@@ -10,7 +10,6 @@ public class StartReplica {
 		try {
 			Replica r = new Replica(rep);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

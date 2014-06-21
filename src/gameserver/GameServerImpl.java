@@ -362,7 +362,7 @@ public class GameServerImpl extends GameServerPOA {
 	public String getPlayerStatusString() {
 //		synchronized (statusStringLock) {
 			String s = "";
-			s += serverName + ": ";
+			s += serverName.substring(0, 2) + ": ";
 			s += playersOnline + " online, ";
 			s += (totalPlayers - playersOnline) + " offline";
 
@@ -397,5 +397,9 @@ public class GameServerImpl extends GameServerPOA {
 	}
 
 	// ------------------------------------------------------------------------
-
+	
+	void shutdown() {
+		udpSstatus.shutdown();
+		udpStransfer.shutdown();
+	}
 }

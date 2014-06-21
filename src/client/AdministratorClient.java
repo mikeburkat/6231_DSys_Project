@@ -1,5 +1,7 @@
 package client;
 
+import frontend.FrontEnd;
+import frontend.FrontEndHelper;
 import gameserver.GameServer;
 import gameserver.GameServerHelper;
 
@@ -43,7 +45,7 @@ public class AdministratorClient {
 	// ------------------------------------------------------------------------
 
 	public String getPlayerStatus() {
-		GameServer server = findServer(ipAddress);
+		FrontEnd server = findServer(ipAddress);
 		System.out.println(adminUserName + " " + adminPassword + " "
 				+ ipAddress + " ");
 
@@ -56,7 +58,7 @@ public class AdministratorClient {
 	// ------------------------------------------------------------------------
 
 	public boolean suspendAccount(String userNameToSuspend) {
-		GameServer server = findServer(ipAddress);
+		FrontEnd server = findServer(ipAddress);
 		System.out.println(adminUserName + " " + adminPassword + " "
 				+ ipAddress + " " + userNameToSuspend);
 
@@ -72,8 +74,8 @@ public class AdministratorClient {
 	// TODO: convert this to find the front end server
 	// ------------------------------------------------------------------------
 
-	private GameServer findServer(String ip) {
-		GameServer server = null;
+	private FrontEnd findServer(String ip) {
+		FrontEnd server = null;
 		String s = null;
 
 		boolean matches = Pattern.matches(
@@ -94,7 +96,7 @@ public class AdministratorClient {
 	// ------------------------------------------------------------------------
 	// TODO: convert this to get the front end server
 	// ------------------------------------------------------------------------
-	public GameServer getServer(String serverName) {
+	public FrontEnd getServer(String serverName) {
 
 		String[] args = new String[1];
 		ORB orb = ORB.init(args, null);
@@ -109,12 +111,10 @@ public class AdministratorClient {
 		}
 
 		org.omg.CORBA.Object naObj = orb.string_to_object(na);
-		GameServer serv = GameServerHelper.narrow(naObj);
+		FrontEnd serv = FrontEndHelper.narrow(naObj);
 
 		return serv;
 
 	}
-
-	// ------------------------------------------------------------------------
 
 }

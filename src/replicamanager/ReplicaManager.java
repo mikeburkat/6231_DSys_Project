@@ -2,7 +2,7 @@ package replicamanager;
 
 import java.util.ArrayList;
 
-import frontend.FrontEnd;
+import frontend.FrontEndServer;
 
 public class ReplicaManager {
 
@@ -54,13 +54,18 @@ public class ReplicaManager {
 
 	public void reboot(int replica) {
 		kill.shutdown(replica);
+		try {
+		    Thread.sleep(500);
+		} catch(InterruptedException ex) {
+		    Thread.currentThread().interrupt();
+		}
 		starter.boot(replica);
 	}
 
 	public static void main(String[] args) {
 		ReplicaManager rm = new ReplicaManager();
 		
-		FrontEnd fe = new FrontEnd(null);
+		FrontEndServer fe = new FrontEndServer();
 		new Thread(fe).start();
 	}
 

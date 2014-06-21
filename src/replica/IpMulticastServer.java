@@ -21,6 +21,7 @@ public class IpMulticastServer implements Runnable {
 	private InetAddress groupSend = null;
 	int inPort;
 	int outPort;
+	boolean running = true;
 
 	public IpMulticastServer(Replica rep, int recievePort, int sendPort) {
 		replica = rep;
@@ -41,7 +42,7 @@ public class IpMulticastServer implements Runnable {
 	@Override
 	public void run() {
 		try {
-			while (true) {
+			while (running) {
 				byte objectBytes[] = new byte[4096];
 				ByteArrayInputStream baos = new ByteArrayInputStream(objectBytes);
 				DatagramPacket message = new DatagramPacket(objectBytes, objectBytes.length);
@@ -128,7 +129,11 @@ public class IpMulticastServer implements Runnable {
 				sender.close();
 			}
 		}
+	}
 
+	public void shutdown() {
+		running = false;
+		
 	}
 
 }

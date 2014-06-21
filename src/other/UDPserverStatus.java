@@ -58,4 +58,9 @@ public class UDPserverStatus implements Runnable {
 		}
 
 	}
+	public void shutdown() {
+		if (socket != null) {
+			socket.close();
+		}
+	}
 }

@@ -8,13 +8,13 @@ import java.net.SocketException;
 
 public class UdpKillOrder {
 
-	private int replica0basePort = 6100;
+	private int replicaBasePort = 6500;
 	String killOrder = "KILL";
 	
 	public void shutdown(int i) {
 		
 		// calculate port number of the replica
-		int port = replica0basePort + i;
+		int port = replicaBasePort + i;
 		DatagramSocket replicaSocket = null;
 		try
 		{
@@ -22,14 +22,9 @@ public class UdpKillOrder {
 			byte[] order  = killOrder.getBytes();
 			InetAddress host = InetAddress.getByName("localhost");
 			DatagramPacket requestKillOrder = new DatagramPacket(order, order.length, host, port);
-		// TODO send a shutdown notice to the proper replica
 			replicaSocket.send(requestKillOrder);
-		}
-		catch (SocketException e) 
-		{
-			System.out.println("Socket" + e.getMessage());
+		
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

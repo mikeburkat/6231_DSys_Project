@@ -1,5 +1,7 @@
 package threads;
 
+import frontend.FrontEnd;
+import frontend.FrontEndHelper;
 import gameserver.GameServer;
 import gameserver.GameServerHelper;
 
@@ -43,7 +45,7 @@ public class PlayerSignInOutThread implements Runnable{
 
 	public boolean createPlayerAccount() {
 		System.out.println("create:" + userName + " " + password + " " + ipAddress + " ");
-		GameServer server = findServer(ipAddress);
+		FrontEnd server = findServer(ipAddress);
 
 		String out = server.createPlayerAccount(firstName, lastName, age,
 				userName, password, ipAddress);
@@ -57,7 +59,7 @@ public class PlayerSignInOutThread implements Runnable{
 
 	public boolean playerSignIn() {
 		String out = "";
-		GameServer server = findServer(ipAddress);
+		FrontEnd server = findServer(ipAddress);
 		System.out.println("signIn:" + userName + " " + password + " " + ipAddress + " ");
 
 		out = server.playerSignIn(userName, password, ipAddress);
@@ -70,7 +72,7 @@ public class PlayerSignInOutThread implements Runnable{
 	// ------------------------------------------------------------------------
 
 	public boolean playerSignOut() {
-		GameServer server = findServer(ipAddress);
+		FrontEnd server = findServer(ipAddress);
 		System.out.println("signOut:" + userName + " " + ipAddress + " ");
 
 		String out = server.playerSignOut(userName, ipAddress);
@@ -82,65 +84,50 @@ public class PlayerSignInOutThread implements Runnable{
 
 	// ------------------------------------------------------------------------
 
-	private GameServer findServer(String ip) {
-		GameServer server = null;
-		String s = null;
-		
-		boolean matches = Pattern.matches(
-				"^[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}$", ip);
-		if (!matches) {
-			System.out.println("Invalid IP address: " + ip);
-			return null;
-		}
+		private FrontEnd findServer(String ip) {
+			FrontEnd server = null;
+			String s = null;
 
-		s = ip.substring(0, 3);
-		try {
-			switch (s) {
-			case "132":
-				server = getServer("NA");
-				break;
-			case "93.":
-				server = getServer("EU");
-				break;
-			case "182":
-				server = getServer("AS");
-				break;
-			default:
+			boolean matches = Pattern.matches(
+					"^[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}$", ip);
+			if (!matches) {
 				System.out.println("Invalid IP address: " + ip);
-				break;
+				return null;
 			}
-			;
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
+			try {
+				server = getServer("FE");
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+				e.printStackTrace();
+			}
+			return server;
 		}
-		return server;
-	}
 
-	// ------------------------------------------------------------------------
-	
-	public GameServer getServer(String serverName) {
-		
-		String[] args = new String[1];
-		ORB orb = ORB.init(args, null);
-		BufferedReader br;
-		String na = null;
-		try {
-			br = new BufferedReader(new FileReader(serverName+".txt"));
-			na = br.readLine();
-			br.close();
-		} catch (IOException e1) {
-			e1.printStackTrace();
+		// ------------------------------------------------------------------------
+
+		public FrontEnd getServer(String serverName) {
+
+			String[] args = new String[1];
+			ORB orb = ORB.init(args, null);
+			BufferedReader br;
+			String na = null;
+			try {
+				br = new BufferedReader(new FileReader(serverName + ".txt"));
+				na = br.readLine();
+				br.close();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+
+			org.omg.CORBA.Object naObj = orb.string_to_object(na);
+			FrontEnd serv = FrontEndHelper.narrow(naObj);
+
+			return serv;
+
 		}
+
+		// ------------------------------------------------------------------------
 		
-		org.omg.CORBA.Object naObj = orb.string_to_object(na);
-		GameServer serv = GameServerHelper.narrow(naObj);
-		
-		return serv;
-	
-	}
-	
-	// ------------------------------------------------------------------------
 		/**
 		 * This is only used for testing concurrency. It is called from the UnitTestClients
 		 */

@@ -2,12 +2,22 @@ package clients;
 
 import static org.junit.Assert.*;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import client.AdministratorClient;
 import client.PlayerClient;
 
 public class UnitTestGameServerAssignment2 {
+	
+	@Before
+	public void before() {
+		try {
+			new Thread().sleep(50);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	/**
 	 * Tests that a player account was suspended.

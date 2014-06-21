@@ -74,4 +74,10 @@ public class UDPserverTransfer implements Runnable {
 		}
 
 	}
+	
+	public void shutdown() {
+		if (socket != null) {
+			socket.close();
+		}
+	}
 }

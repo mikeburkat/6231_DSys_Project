@@ -28,13 +28,16 @@ public class Replica {
 	private int replicaManagerPort = 4002;
 	private int frontEndSendsFromPort = 6200;
 	private int frontEndRecieveInPort = 6201;
-	int basePort = 6210;
+	private int basePort = 6500;
+	private InitServers servers;
+	private IpMulticastServer multicastServer;
+	private UdpKillSwitch killSwitch;
 	
 	// ------------------------------------------------------------------------
 	
 	public Replica(int rep) throws IOException {
 		replicaID = rep;
-		InitServers servers = new InitServers(replicaID);
+		servers = new InitServers(replicaID);
 		
 		if (replicaID == 0) {
 			// do leader code: 
@@ -65,12 +68,12 @@ public class Replica {
 		
 		// common code: 
 		// join the IP multicast group to get messages from leader.
-		IpMulticastServer multicastServer = new IpMulticastServer(this, multicastReplicaRecievePort, multicastReplicaSendPort);
+		multicastServer = new IpMulticastServer(this, multicastReplicaRecievePort, multicastReplicaSendPort);
 		new Thread(multicastServer).start();
 		
 		// setup a udp killswitch.
-		UdpKillSwitch killSwitch = new UdpKillSwitch(this, basePort+replicaID);
-		
+		killSwitch = new UdpKillSwitch(this, basePort+replicaID);
+		new Thread(killSwitch).start();
 		
 		
 	}
@@ -217,7 +220,9 @@ public class Replica {
 		// ------------------------------------------------------------------------
 		
 		public void shutdown() {
-			
+			System.out.println("Shutting down replica: " + replicaID);
+			servers.shutdown();
+			multicastServer.shutdown();
 		}
 		
 }

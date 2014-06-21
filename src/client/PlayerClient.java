@@ -1,5 +1,9 @@
 package client;
 
+import frontend.FrontEnd;
+import frontend.FrontEndHelper;
+import frontend.FrontEndImpl;
+import frontend.FrontEndServer;
 import gameserver.GameServer;
 import gameserver.GameServerHelper;
 
@@ -44,7 +48,7 @@ public class PlayerClient {
 	public boolean createPlayerAccount() {
 		System.out.println("create:" + userName + " " + password + " "
 				+ ipAddress + " ");
-		GameServer server = findServer(ipAddress);
+		FrontEnd server = findServer(ipAddress);
 
 		String out = server.createPlayerAccount(firstName, lastName, age,
 				userName, password, ipAddress);
@@ -58,7 +62,7 @@ public class PlayerClient {
 
 	public boolean playerSignIn() {
 		String out = "";
-		GameServer server = findServer(ipAddress);
+		FrontEnd server = findServer(ipAddress);
 		System.out.println("signIn:" + userName + " " + password + " "
 				+ ipAddress + " ");
 
@@ -72,7 +76,7 @@ public class PlayerClient {
 	// ------------------------------------------------------------------------
 
 	public boolean playerSignOut() {
-		GameServer server = findServer(ipAddress);
+		FrontEnd server = findServer(ipAddress);
 		System.out.println("signOut:" + userName + " " + ipAddress + " ");
 
 		String out = server.playerSignOut(userName, ipAddress);
@@ -84,9 +88,7 @@ public class PlayerClient {
 
 	// ------------------------------------------------------------------------
 
-	public boolean transferAccount(String newIpAddress) {
-
-		GameServer server = findServer(ipAddress);
+	public boolean transferAccount(String newIpAddress) {FrontEnd server = findServer(ipAddress);
 		System.out.println("transfer:" + userName + " " + ipAddress + " ");
 
 		String out = server.transferAccount(userName, password, ipAddress,
@@ -98,11 +100,9 @@ public class PlayerClient {
 	}
 
 	// ------------------------------------------------------------------------
-	// TODO: convert this to find the front end server
-	// ------------------------------------------------------------------------
 
-	private GameServer findServer(String ip) {
-		GameServer server = null;
+	private FrontEnd findServer(String ip) {
+		FrontEnd server = null;
 		String s = null;
 
 		boolean matches = Pattern.matches(
@@ -121,9 +121,8 @@ public class PlayerClient {
 	}
 
 	// ------------------------------------------------------------------------
-	// TODO: convert this to get the front end server
-	// ------------------------------------------------------------------------
-	public GameServer getServer(String serverName) {
+
+	public FrontEnd getServer(String serverName) {
 
 		String[] args = new String[1];
 		ORB orb = ORB.init(args, null);
@@ -138,7 +137,7 @@ public class PlayerClient {
 		}
 
 		org.omg.CORBA.Object naObj = orb.string_to_object(na);
-		GameServer serv = GameServerHelper.narrow(naObj);
+		FrontEnd serv = FrontEndHelper.narrow(naObj);
 
 		return serv;
 

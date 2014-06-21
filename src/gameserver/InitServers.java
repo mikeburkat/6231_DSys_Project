@@ -4,21 +4,31 @@ import java.io.File;
 
 public class InitServers {
 
+	Thread naT;
+	Thread euT;
+	Thread asT;
+	
+	NorthAmericaServer na;
+	EuropeServer eu;
+	AsiaServer as;
+	
 	public InitServers(int replica) {
 		
 		deleteDIR("NA"+replica);
 		deleteDIR("EU"+replica);
 		deleteDIR("AS"+replica);
 		
-		
-		NorthAmericaServer na = new NorthAmericaServer(replica);
-		EuropeServer eu = new EuropeServer(replica);
-		AsiaServer as = new AsiaServer(replica);
+		na = new NorthAmericaServer(replica);
+		eu = new EuropeServer(replica);
+		as = new AsiaServer(replica);
 
-		new Thread(na).start();
-		new Thread(eu).start();
-		new Thread(as).start();
+		naT = new Thread(na);
+		euT = new Thread(eu);
+		asT = new Thread(as);
 		
+		naT.start();
+		euT.start();
+		asT.start();
 	}
 	
 	private static void deleteDIR(String in) {
@@ -29,5 +39,11 @@ public class InitServers {
 				log.delete();
 			}
 		}
+	}
+	
+	public void shutdown() {
+		na.shutdown();
+		eu.shutdown();
+		as.shutdown();
 	}
 }
